@@ -14,69 +14,67 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout Repository
+      # Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Setup Bun
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      # Setup Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-      # 3. Setup Java
+      # Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      # 4. Install Dependencies
+      # Install Dependencies
       - name: Install Dependencies
-        run: bun install
+        run: |
+          npm install --no-audit --no-fund --include=optional
 
-      # 5. Fix TypeScript
-      - name: Fix TypeScript Version
-        run: bun add -d typescript@5.9.3
-
-      # 6. Install Capacitor
+      # Install Capacitor
       - name: Install Capacitor
         run: |
-          bun add @capacitor/core@6
-          bun add @capacitor/cli@6
-          bun add @capacitor/android@6
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 --save --no-audit --no-fund --include=optional
 
-      # 7. Build Web
+      # Build Web
       - name: Build Web
-        run: bun run build
+        run: npm run build
 
-      # 8. Setup Capacitor
+      # Setup Capacitor
       - name: Setup Capacitor
         run: |
           if [ ! -f capacitor.config.ts ] && [ ! -f capacitor.config.json ]; then
-            bunx cap init "LK ONLINE" "com.lk.online" --web-dir=dist
+            npx cap init "LK ONLINE" "com.lk.online" --web-dir=dist
           fi
 
-      # 9. Add Android
+      # Add Android
       - name: Add Android
         run: |
           if [ ! -d android ]; then
-            bunx cap add android
+            npx cap add android
           fi
 
-      # 10. Sync Android
+      # Sync Android
       - name: Sync Android
-        run: bunx cap sync android
+        run: npx cap sync android
 
-      # 11. Build APK
+      # Build APK
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      # 12. Upload APK
+      # Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: LK-ONLINE-APK
           path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+          retention-days: 7
