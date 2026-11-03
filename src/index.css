@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-display: 'Outfit', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #050505;
+    color: #f5f5f7;
+    overflow: hidden;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes rgbRedPulse {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(220, 38, 38, 0.28), inset 0 0 12px rgba(220, 38, 38, 0.08);
+    border-color: rgba(239, 68, 68, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(255, 24, 56, 0.45), inset 0 0 16px rgba(255, 24, 56, 0.14);
+    border-color: rgba(255, 42, 75, 0.85);
+  }
+}
+
+@keyframes rgbLineFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.opai-rgb-border {
+  animation: rgbRedPulse 4s ease-in-out infinite;
+}
+
+.opai-rgb-strip {
+  background: linear-gradient(90deg, #09090b, #dc2626, #ff1e38, #7f1d1d, #09090b);
+  background-size: 300% 100%;
+  animation: rgbLineFlow 6s ease infinite;
+}
+
+/* WhatsApp Dark Red & Black Subtle Chat Wallpaper */
+.opai-whatsapp-bg {
+  background-color: #07070a;
+  background-image: radial-gradient(rgba(220, 38, 38, 0.09) 1px, transparent 1px),
+    radial-gradient(rgba(153, 27, 27, 0.06) 1px, #07070a 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+/* Custom sleek red & black scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08080a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #271215;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}

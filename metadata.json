@@ -1,0 +1,6 @@
+{
+  "name": "OPAI Chat",
+  "description": "Premium red and black real-time social messaging platform with live friend chat, role-managed groups, private contact aliases, and community posts powered by MongoDB.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
