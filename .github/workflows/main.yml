@@ -1,3 +1,5 @@
+title: LK ONLINE APK Builder
+
 name: LK ONLINE APK Builder
 
 on:
@@ -14,63 +16,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      # Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      # Install Dependencies
       - name: Install Dependencies
         run: |
-          npm install --no-audit --no-fund --include=optional
+          npm install --legacy-peer-deps --include=optional --no-audit --no-fund
 
-      # Install Capacitor
       - name: Install Capacitor
         run: |
-          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 --save --no-audit --no-fund --include=optional
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 --save --legacy-peer-deps --include=optional --no-audit --no-fund
 
-      # Build Web
       - name: Build Web
         run: npm run build
 
-      # Setup Capacitor
       - name: Setup Capacitor
         run: |
           if [ ! -f capacitor.config.ts ] && [ ! -f capacitor.config.json ]; then
             npx cap init "LK ONLINE" "com.lk.online" --web-dir=dist
           fi
 
-      # Add Android
       - name: Add Android
         run: |
           if [ ! -d android ]; then
             npx cap add android
           fi
 
-      # Sync Android
       - name: Sync Android
         run: npx cap sync android
 
-      # Build APK
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      # Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
