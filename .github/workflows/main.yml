@@ -1,64 +1,82 @@
 name: LK ONLINE APK Builder
 
-'on':
+on:
   workflow_dispatch:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout Repository
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 2. Setup Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      # 3. Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
+      # 4. Install Dependencies
       - name: Install Dependencies
         run: bun install
 
+      # 5. Fix TypeScript
       - name: Fix TypeScript Version
         run: bun add -d typescript@5.9.3
 
+      # 6. Install Capacitor
       - name: Install Capacitor
         run: |
-          bun add @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          bun add @capacitor/core@6
+          bun add @capacitor/cli@6
+          bun add @capacitor/android@6
 
+      # 7. Build Web
       - name: Build Web
         run: bun run build
 
+      # 8. Setup Capacitor
       - name: Setup Capacitor
         run: |
           if [ ! -f capacitor.config.ts ] && [ ! -f capacitor.config.json ]; then
             bunx cap init "LK ONLINE" "com.lk.online" --web-dir=dist
           fi
 
+      # 9. Add Android
       - name: Add Android
         run: |
           if [ ! -d android ]; then
             bunx cap add android
           fi
 
+      # 10. Sync Android
       - name: Sync Android
         run: bunx cap sync android
 
+      # 11. Build APK
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
+      # 12. Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: LK-ONLINE-APK
           path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
