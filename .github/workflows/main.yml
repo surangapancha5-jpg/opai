@@ -29,10 +29,21 @@ jobs:
           java-version: '17'
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps --include=optional --no-audit --no-fund
+        run: |
+          npm install --legacy-peer-deps --include=optional --no-audit --no-fund
+
+      - name: Fix TypeScript Version
+        run: |
+          npm install --save-dev typescript@5.9.3 --legacy-peer-deps
 
       - name: Install Capacitor
-        run: npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 --save --legacy-peer-deps
+        run: |
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 --save --legacy-peer-deps
+
+      - name: Check Versions
+        run: |
+          npx tsc --version
+          npx cap --version
 
       - name: Build Web
         run: npm run build
@@ -64,3 +75,4 @@ jobs:
           name: LK-ONLINE-APK
           path: android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+          retention-days: 7
